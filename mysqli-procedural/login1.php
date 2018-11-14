@@ -3,13 +3,22 @@ session_start();
 
 $errorMessage = '';
 if (isset ($_POST['txtUserId']) && isset($_POST['txtPassword'])){
-	if ($_POST['txtUserId'] === 'admin' && $_POST['txtPassword'] === 'admin'){
+	include 'koneksi.php';
+
+	$userId = $_POST['txtUserId'];
+	$password = $_POST['txtPassword'];
+	
+	$sql = "SELECT user_id FROM user WHERE user_id = '$userId' AND user_password = '$password'";
+	$result = mysqli_query($host, $sql) or die('Query filed.' .mysql_error());
+
+	if (mysqli_num_rows($result)==1){
 		$_SESSION['basic_is_logged_in'] = true;
 		header('Location: index.php');
 		exit;
 	}else{
 		$errorMessage = 'Sorry, wrong username / password';
 	}
+	include'closedb.php';
 }
 ?>
 

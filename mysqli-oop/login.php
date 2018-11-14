@@ -3,13 +3,23 @@ session_start();
 
 $errorMessage = '';
 if (isset ($_POST['txtUserId']) && isset($_POST['txtPassword'])){
-	if ($_POST['txtUserId'] === 'admin' && $_POST['txtPassword'] === 'admin'){
+	include 'library/config.php';
+	include 'library/opendb.php';
+
+	$userId = $_POST['txtUserId'];
+	$password = $_POST['txtPassword'];
+	
+	$sql = "SELECT user_id FROM user WHERE user_id = '$userId' AND user_password = PASSWORD ('$password')";
+	$result = mysql_query($sql) or die('Query filed.' .mysql_error());
+
+	if (mysql_num_rows($result)==1){
 		$_SESSION['basic_is_logged_in'] = true;
 		header('Location: index.php');
 		exit;
 	}else{
 		$errorMessage = 'Sorry, wrong username / password';
 	}
+	include'library/closedb.php';
 }
 ?>
 
